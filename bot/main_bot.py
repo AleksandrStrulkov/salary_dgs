@@ -98,7 +98,8 @@ async def input_sum_days(message: Message, state: FSMContext):
         await state.update_data(salary=salary)
         await state.set_state(SalaryInput.night_shifts)
         await message.answer(
-                "Введите количество ночных смен.\n" "Введите 0, если таковых нет: "
+                "Введите количество ночных смен.\n"
+                "Введите 0, если таковых нет:"
         )
         logger.info(
                 f"Введено количество ночных смен {message.text} пользователем {message.from_user.username}"
