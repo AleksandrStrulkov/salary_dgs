@@ -1,8 +1,19 @@
 from salary_dgs.constant import *
 from decimal import Decimal, ROUND_HALF_UP, getcontext
-
+# import logging
 from salary_dgs.models import GetDataSalary
 import asyncio
+
+# logging.basicConfig(
+#         level=logging.INFO,
+#         format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
+#         handlers=[
+#                 logging.FileHandler("services.log", encoding="utf-8"),  # Логи в файл
+#                 logging.StreamHandler(),  # Логи в консоль (можно убрать)
+#         ],
+# )
+#
+# logger = logging.getLogger(__name__)
 
 
 class CalculationBaseSalary:
@@ -73,35 +84,6 @@ class CalculationBaseSalary:
             Decimal("0.01"), rounding=ROUND_HALF_UP
         )
 
-    async def calculation_base(self) -> Decimal:
-        """Расчет базовой суммы"""
-        base_salary = await self.calculation_base_salary()
-        calculation_bonus = await self.calculation_bonus()
-        calculation_underground = await self.calculation_underground()
-        calculation_night_shifts = await self.calculation_night_shifts()
-        return (
-            base_salary
-            + calculation_bonus
-            + calculation_underground
-            + calculation_night_shifts
-        ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
-
-    async def calculation_district_allowance(self) -> Decimal:
-        """Расчет районной надбавки"""
-        calculation_base = await self.calculation_base()
-        district_allowance = Decimal(FACTORS["Районный коэффициент"])
-        return (calculation_base * district_allowance / 100).quantize(
-            Decimal("0.01"), rounding=ROUND_HALF_UP
-        )
-
-    async def calculation_north_allowance(self) -> Decimal:
-        """Расчет северной надбавки"""
-        calculation_base = await self.calculation_base()
-        district_allowance = Decimal(FACTORS["Северная надбавка"])
-        return (calculation_base * district_allowance / 100).quantize(
-            Decimal("0.01"), rounding=ROUND_HALF_UP
-        )
-
     async def calculation_working_in_temperature(self) -> Decimal:
         """Расчет надбавки за работу в условиях повышенной температуры"""
         base_salary = await self.salary_data.get_base_salary()
@@ -117,10 +99,45 @@ class CalculationBaseSalary:
 
         return (without_interest * surcharge_for_temperature / 100).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
+    async def calculation_base(self) -> Decimal:
+        """Расчет базовой суммы"""
+        base_salary = await self.calculation_base_salary()
+        calculation_bonus = await self.calculation_bonus()
+        calculation_underground = await self.calculation_underground()
+        calculation_night_shifts = await self.calculation_night_shifts()
+        calculation_working_in_temperature = await self.calculation_working_in_temperature()
+        return (
+            base_salary
+            + calculation_bonus
+            + calculation_underground
+            + calculation_night_shifts
+            + calculation_working_in_temperature
+        ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
+
+    async def calculation_district_allowance(self) -> Decimal:
+        """Расчет районной надбавки"""
+        calculation_base = await self.calculation_base()
+        district_allowance = Decimal(FACTORS["Районный коэффициент"])
+        # logger.info(f"В расчете премии используется: {calculation_base} * {district_allowance}")
+        return (calculation_base * district_allowance / 100).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
+
+    async def calculation_north_allowance(self) -> Decimal:
+        """Расчет северной надбавки"""
+        calculation_base = await self.calculation_base()
+        district_allowance = Decimal(FACTORS["Северная надбавка"])
+        return (calculation_base * district_allowance / 100).quantize(
+            Decimal("0.01"), rounding=ROUND_HALF_UP
+        )
+
     async def calculation_total_accruals(self) -> Decimal:
         """Расчет общей суммы начислений"""
         return (
-            await self.calculation_base()
+            await self.calculation_bonus()
+            + await self.calculation_underground()
+            + await self.calculation_base_salary()
+            + await self.calculation_night_shifts()
             + await self.calculation_district_allowance()
             + await self.calculation_north_allowance()
             + await self.calculation_working_in_temperature()
@@ -143,7 +160,7 @@ class CalculationBaseSalary:
         if 3 in children:
             deduction += Decimal("6000")  # 6000 total for first three
 
-            # Для 4го и последующих детей также +3000 каждый
+        # Для 4го и последующих детей также +3000 каждый
         extra_children = len([x for x in children if x >= 4])
         deduction += extra_children * Decimal("6000")
 
@@ -215,18 +232,18 @@ class CalculationBaseSalary:
     async def month_quarter_payment_calculation(self) -> str:
         """Определяет месяц выплаты за переработку (в конце квартала)"""
         quarter_to_payment = {
-                "декабрь": "март",
-                "январь": "март",
-                "февраль": "март",
-                "март": "июнь",
-                "апрель": "июнь",
-                "май": "июнь",
-                "июнь": "сентябрь",
-                "июль": "июнь",
-                "август": "сентябрь",
-                "сентябрь": "декабрь",
-                "октябрь": "декабрь",
-                "ноябрь": "декабрь"
+                "декабрь": "апреле текущего года",
+                "январь": "апреле текущего года",
+                "февраль": "апреле текущего года",
+                "март": "июле текущего года",
+                "апрель": "июле текущего года",
+                "май": "июле текущего года",
+                "июнь": "октябре текущего года",
+                "июль": "октябре текущего года",
+                "август": "октябре текущего года",
+                "сентябрь": "январе следующего года",
+                "октябрь": "январе следующего года",
+                "ноябрь": "январе следующего года"
         }
 
         month = await self.salary_data.get_month()
