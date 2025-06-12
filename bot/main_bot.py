@@ -44,7 +44,7 @@ async def cmd_start(message: Message, state: FSMContext):
     )
     logger.info(f"Команда /start, пользователь {message.from_user.username}")
     logger.info(
-            f"Введен оклад {message.text} пользователю {message.from_user.username}"
+            f"Введен оклад пользователем {message.from_user.username}"
     )
 
 
@@ -59,12 +59,12 @@ async def input_base_salary(message: Message, state: FSMContext):
         await state.set_state(SalaryInput.month)
         await message.answer("Введите расчетный месяц: ")
         logger.info(
-                f"Введен месяц {message.text} пользователю {message.from_user.username}"
+                f"Введен месяц {message.text} пользователем {message.from_user.username}"
         )
     except ValueError as e:
         await message.answer(f"Ошибка: {e}")
         logger.error(
-                f"Ошибка ввода месяца {message.text} пользователю {message.from_user.username}"
+                f"Ошибка ввода месяца {message.text} пользователем {message.from_user.username}"
         )
 
 
@@ -84,7 +84,7 @@ async def input_month(message: Message, state: FSMContext):
     except ValueError as e:
         await message.answer(f"Ошибка: {e}")
         logger.error(
-                f"Ошибка ввода месяца {message.text} пользователем {message.from_user.username}"
+                f"Ошибка ввода рабочих дней {message.text} пользователем {message.from_user.username}"
         )
 
 
@@ -98,7 +98,7 @@ async def input_sum_days(message: Message, state: FSMContext):
         await state.update_data(salary=salary)
         await state.set_state(SalaryInput.night_shifts)
         await message.answer(
-                "Введите количество ночных смен\n" "Введите 0, если таковых нет: "
+                "Введите количество ночных смен.\n" "Введите 0, если таковых нет: "
         )
         logger.info(
                 f"Введено количество ночных смен {message.text} пользователем {message.from_user.username}"
@@ -120,7 +120,8 @@ async def input_night_shifts(message: Message, state: FSMContext):
         await state.update_data(salary=salary)
         await state.set_state(SalaryInput.evening_shifts)
         await message.answer(
-                "Введите количество вечерних смен\n" "Введите 0, если таковых нет: "
+                "Введите количество вечерних смен.\n" 
+                "Введите 0, если таковых нет:"
         )
         logger.info(
                 f"Введено количество вечерних смен {message.text} пользователем {message.from_user.username}"
@@ -142,7 +143,7 @@ async def input_evening_shifts(message: Message, state: FSMContext):
         await state.update_data(salary=salary)
         await state.set_state(SalaryInput.temperature_work)
         await message.answer(
-                "Введите количество смен работы в температуре свыше +26 градусов\n"
+                "Введите количество смен работы в температуре свыше +26 градусов.\n"
                 "Введите 0, если таковых нет: "
         )
         logger.info(
@@ -152,7 +153,7 @@ async def input_evening_shifts(message: Message, state: FSMContext):
     except ValueError as e:
         await message.answer(f"Ошибка: {e}")
         logger.error(
-                f"Ошибка ввода количество смен работы в температуре {message.text} "
+                f"Ошибка ввода количества смен работы в температуре {message.text} "
                 f"пользователем {message.from_user.username} - {e}"
         )
 
@@ -187,7 +188,7 @@ async def input_temperature_work(message: Message, state: FSMContext):
     except ValueError as e:
         await message.answer(f"Ошибка: {e}")
         logger.error(
-                f"Ошибка ввода количество детей дошкольного возраста {message.text} "
+                f"Ошибка ввода количество детей {message.text} "
                 f"пользователем {message.from_user.username} - {e}"
         )
 
@@ -205,9 +206,9 @@ async def input_children(message: Message, state: FSMContext):
                 "Введите через запятую или одним числом процент по алиментам.\n"
                 "Нет алиментов укажите: 0\n\n"
                 "Примеры ввода:\n"
-                "От одного брака один ребенок: 25\n"
-                "От одного брака два ребенка: 33\n"
-                "От одного брака три ребенка и более: 50\n"
+                "От одного брака и один ребенок: 25\n"
+                "От одного брака и два ребенка: 33\n"
+                "От одного брака и три ребенка и более: 50\n"
                 "От разных браков: 25,25 или 25,16 или 33,25 или 50,25"
         )
     except ValueError as e:
