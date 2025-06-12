@@ -180,16 +180,17 @@ def validate_alimony(func):
             part = part.strip()
             if not part.isdigit():
                 raise ValueError(
-                    f"Некорректное значение '{part}'. Должно быть целое число."
+                    f"Некорректное значение '{part}'. Должно быть число."
                 )
 
             alimony_num = int(part)
-            if alimony_num < 16:
-                raise ValueError(f"Слишком маленький процент: {alimony_num}. Минимум 16.")
-            if alimony_num > 70:
-                raise ValueError(
-                    f"Слишком большой процент: {alimony_num}. Максимум 70."
-                )
+            if alimony_num != 0:
+                if alimony_num < 16:
+                    raise ValueError(f"Слишком маленький процент: {alimony_num}. Минимум 16.")
+                if alimony_num > 70:
+                    raise ValueError(
+                        f"Слишком большой процент: {alimony_num}. Максимум 70."
+                    )
 
             alimony_list.append(alimony_num)
 

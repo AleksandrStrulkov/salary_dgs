@@ -10,3 +10,4 @@ class SalaryInput(StatesGroup):
     temperature_work = State()
     children = State()
     alimony = State()
+    show_full_result = State()
