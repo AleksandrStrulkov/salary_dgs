@@ -12,13 +12,6 @@ from salary_dgs.validate_dekarators import (
 )
 
 
-# class BaseSalary:
-#     def __init__(self, base_salary: str, month: str, sum_days: int):
-#         self._base_salary = base_salary
-#         self.month = month
-#         self.sum_days = sum_days
-#         self.night_shifts = None
-#         self.evening_shifts = None
 @dataclass
 class BaseSalary:
     _base_salary: str = None
