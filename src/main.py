@@ -115,7 +115,6 @@ async def main():
         f"вы получите в конце квартала, месяц: "
         f"{(await answer_base_salary.month_quarter_payment_calculation()).capitalize()}"
         )
-    print(f"переменные районной надбавки: {await answer_base_salary.calculation_district_allowance()}")
 
 if __name__ == "__main__":
     asyncio.run(main())
