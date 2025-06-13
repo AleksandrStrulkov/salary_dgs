@@ -8,17 +8,10 @@ from salary_dgs.validate_dekarators import (
     validate_evening_shifts,
     validate_days_night_evening_temperature,
     validate_days_temperature_work,
-    validate_children, validate_alimony,
+    validate_children, validate_alimony, validate_night_shifts,
 )
 
 
-# class BaseSalary:
-#     def __init__(self, base_salary: str, month: str, sum_days: int):
-#         self._base_salary = base_salary
-#         self.month = month
-#         self.sum_days = sum_days
-#         self.night_shifts = None
-#         self.evening_shifts = None
 @dataclass
 class BaseSalary:
     _base_salary: str = None
@@ -29,6 +22,7 @@ class BaseSalary:
     _temperature_work: str = None
     _children: str = None
     _alimony: str = None
+    init_count: int = 0
 
     @property
     def base_salary(self):
@@ -62,7 +56,7 @@ class BaseSalary:
         return self._night_shifts
 
     @night_shifts.setter
-    @validate_days_night_evening_temperature
+    @validate_night_shifts
     def night_shifts(self, value):
         self._night_shifts = value.strip()
 
@@ -71,7 +65,6 @@ class BaseSalary:
         return self._evening_shifts
 
     @evening_shifts.setter
-    @validate_days_night_evening_temperature
     @validate_evening_shifts
     def evening_shifts(self, value):
         self._evening_shifts = value.strip()
@@ -92,7 +85,7 @@ class BaseSalary:
     @children.setter
     @validate_children
     def children(self, value):
-        self._children = value.strip()
+        self._children = value.strip().replace(".", ",")
 
     @property
     def alimony(self):
@@ -101,10 +94,27 @@ class BaseSalary:
     @alimony.setter
     @validate_alimony
     def alimony(self, value):
-        self._alimony = value.strip()
+        self._alimony = value.strip().replace(".", ",")
 
 
 class GetDataSalary(BaseSalary):
+    def __init__(self, **kwargs):
+        super().__init__(**kwargs)
+        BaseSalary.init_count += 1
+
+    @classmethod
+    def from_base_salary(cls, base: BaseSalary):
+        return cls(
+                _base_salary=base.base_salary,
+                _month=base.month,
+                _sum_days=base.sum_days,
+                _night_shifts=base.night_shifts,
+                _evening_shifts=base.evening_shifts,
+                _temperature_work=base.temperature_work,
+                _children=base.children,
+                _alimony=base.alimony,
+        )
+
     async def get_base_salary(self):
         return Decimal(self.base_salary)
 
@@ -127,7 +137,7 @@ class GetDataSalary(BaseSalary):
         return Decimal(self.temperature_work).quantize(Decimal("0.01"))
 
     async def get_children(self):
-        return self.children
+        return self.children.strip().replace(".", ",")
 
     async def get_alimony(self):
-        return self.alimony
+        return self.alimony.strip().replace(".", ",")

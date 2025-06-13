@@ -3,33 +3,6 @@ from salary_dgs.services import CalculationBaseSalary
 import asyncio
 
 
-# class Salary(GetDataSalary):
-#     north_cov = Decimal('1.5')  # Серная надбавка
-#     district_cov = Decimal('1.3')  # Районный коэффициент
-#     income_tax = Decimal('0.13')  # Подоходный налог
-#     bonus = Decimal('0.4')  # Ежемесячная премия
-#     night_surcharge = Decimal('0.4')  # Ночная надбавка
-#     evening_surcharge = Decimal('0.2')  # Вечерняя надбавка
-#
-#     def get_decimal_north_cov(self):
-#         return self.north_cov
-#
-#     def get_decimal_district_cov(self):
-#         return self.district_cov
-#
-#     def get_decimal_income_tax(self):
-#         return self.income_tax
-#
-#     def get_decimal_bonus(self):
-#         return self.bonus
-#
-#     def get_decimal_night_surcharge(self):
-#         return self.night_surcharge
-#
-#     def get_decimal_evening_surcharge(self):
-#         return self.evening_surcharge
-
-
 async def main():
     emp = GetDataSalary()
     print("Пожалуйста, введите следующие данные:")
