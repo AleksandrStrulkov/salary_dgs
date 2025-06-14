@@ -96,6 +96,33 @@ class BaseSalary:
     def alimony(self, value):
         self._alimony = value.strip().replace(".", ",")
 
+    def to_dict(self):
+        """Преобразовать объект в словарь для сохранения состояния"""
+        return {
+                "_base_salary": self._base_salary,
+                "_month": self._month,
+                "_sum_days": self._sum_days,
+                "_night_shifts": self._night_shifts,
+                "_evening_shifts": self._evening_shifts,
+                "_temperature_work": self._temperature_work,
+                "_children": self._children,
+                "_alimony": self._alimony,
+        }
+
+    @classmethod
+    def from_dict(cls, data):
+        """Создать объект из словаря состояния"""
+        return cls(
+                _base_salary=data.get("_base_salary"),
+                _month=data.get("_month"),
+                _sum_days=data.get("_sum_days"),
+                _night_shifts=data.get("_night_shifts"),
+                _evening_shifts=data.get("_evening_shifts"),
+                _temperature_work=data.get("_temperature_work"),
+                _children=data.get("_children"),
+                _alimony=data.get("_alimony"),
+        )
+
 
 class GetDataSalary(BaseSalary):
     def __init__(self, **kwargs):
