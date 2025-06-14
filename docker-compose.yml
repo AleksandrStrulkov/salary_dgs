@@ -1,5 +1,5 @@
 services:
-  telegram-bot:
+  salary-bot:
     build: .
     container_name: telegram-salary-bot
     env_file:

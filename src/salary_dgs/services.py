@@ -1,17 +1,16 @@
+import logging
 from salary_dgs.cache_decorator import cache_result
 from salary_dgs.constant import *
 from decimal import Decimal, ROUND_HALF_UP, getcontext
-import logging
 from salary_dgs.models import GetDataSalary
-import asyncio
 
 logging.basicConfig(
-        level=logging.INFO,
-        format="%(asctime)s - %(name)s - %(levelname)s - %(funcName)s - %(message)s",
-        handlers=[
-                logging.FileHandler("services.log", encoding="utf-8"),  # Логи в файл
-                logging.StreamHandler(),  # Логи в консоль (можно убрать)
-        ],
+    level=logging.INFO,
+    format="%(asctime)s - %(name)s - %(levelname)s - %(funcName)s - %(message)s",
+    handlers=[
+        logging.FileHandler("bot.log", encoding="utf-8"),  # Логи в файл
+        logging.StreamHandler(),  # Логи в консоль (можно убрать)
+    ],
 )
 
 logger = logging.getLogger(__name__)
