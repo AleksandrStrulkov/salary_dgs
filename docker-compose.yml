@@ -1,9 +1,15 @@
+version: '3.3'
+
 services:
   salary-bot:
     build: .
     container_name: telegram-salary-bot
     env_file:
       - .env
-    restart: unless-stopped
+    restart: always
+    command: python main_bot.py
+    volumes:
+      - .:/app
+    working_dir: /app
     environment:
       - PYTHONPATH=/app/src
