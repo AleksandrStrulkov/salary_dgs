@@ -125,9 +125,6 @@ class BaseSalary:
 
 
 class GetDataSalary(BaseSalary):
-    def __init__(self, **kwargs):
-        super().__init__(**kwargs)
-        BaseSalary.init_count += 1
 
     @classmethod
     def from_base_salary(cls, base: BaseSalary):
