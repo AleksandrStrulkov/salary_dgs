@@ -1,19 +1,19 @@
-import logging
+# import logging
 from salary_dgs.cache_decorator import cache_result
 from salary_dgs.constant import *
 from decimal import Decimal, ROUND_HALF_UP, getcontext
 from salary_dgs.models import GetDataSalary
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s - %(name)s - %(levelname)s - %(funcName)s - %(message)s",
-    handlers=[
-        logging.FileHandler("bot.log", encoding="utf-8"),  # Логи в файл
-        logging.StreamHandler(),  # Логи в консоль (можно убрать)
-    ],
-)
-
-logger = logging.getLogger(__name__)
+# logging.basicConfig(
+#     level=logging.INFO,
+#     format="%(asctime)s - %(name)s - %(levelname)s - %(funcName)s - %(message)s",
+#     handlers=[
+#         logging.FileHandler("bot.log", encoding="utf-8"),  # Логи в файл
+#         logging.StreamHandler(),  # Логи в консоль (можно убрать)
+#     ],
+# )
+#
+# logger = logging.getLogger(__name__)
 
 
 class CalculationBaseSalary:
@@ -35,7 +35,7 @@ class CalculationBaseSalary:
             Decimal("0.01"), rounding=ROUND_HALF_UP
         )
 
-        logger.info(f"Расчет оклада по рабочим дням {base_salary} * {sum_days} / {normal_days_in_month} = {result}")
+        # logger.info(f"Расчет оклада по рабочим дням {base_salary} * {sum_days} / {normal_days_in_month} = {result}")
         return result
 
     @cache_result
@@ -67,8 +67,8 @@ class CalculationBaseSalary:
 
         total_payment = (night_payment + evening_payment) * night_pay_percent / 100
 
-        logger.info(f"Расчет доплаты за работу в ночное время {night_payment}+"
-                    f"{evening_payment} * {night_pay_percent} / 100 = {total_payment}")
+        # logger.info(f"Расчет доплаты за работу в ночное время {night_payment}+"
+        #             f"{evening_payment} * {night_pay_percent} / 100 = {total_payment}")
         return total_payment.quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
     @cache_result
@@ -81,10 +81,10 @@ class CalculationBaseSalary:
             Decimal("0.01"), rounding=ROUND_HALF_UP
         )
 
-        logger.info(
-            f"Расчет надбавки за работу в подземных условиях {base_salary} * "
-            f"{surcharge_for_underground} / 100 = {result}"
-            )
+        # logger.info(
+        #     f"Расчет надбавки за работу в подземных условиях {base_salary} * "
+        #     f"{surcharge_for_underground} / 100 = {result}"
+        #     )
         return result
 
     @cache_result
@@ -102,7 +102,7 @@ class CalculationBaseSalary:
         result = (total_amount * bonus / 100).quantize(
             Decimal("0.01"), rounding=ROUND_HALF_UP
         )
-        logger.info(f"Расчет премии {total_amount} * {bonus} / 100 = {result}")
+        # logger.info(f"Расчет премии {total_amount} * {bonus} / 100 = {result}")
         return result
 
     @cache_result
@@ -124,7 +124,7 @@ class CalculationBaseSalary:
 
         result = (without_interest * surcharge_for_temperature / 100).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
-        logger.info(f"Расчет надбавки за температуру {without_interest} / {surcharge_for_temperature} / 100 = {result}")
+        # logger.info(f"Расчет надбавки за температуру {without_interest} / {surcharge_for_temperature} / 100 = {result}")
         return result
 
     @cache_result
@@ -144,13 +144,13 @@ class CalculationBaseSalary:
             + calculation_working_in_temperature
         ).quantize(Decimal("0.01"), rounding=ROUND_HALF_UP)
 
-        logger.info(f"Расчет базовой суммы "
-                    f"{base_salary}"
-                    f"+{calculation_bonus}"
-                    f"+{calculation_underground}+"
-                    f"{calculation_night_shifts}"
-                    f"+{calculation_working_in_temperature} = {result}"
-                    )
+        # logger.info(f"Расчет базовой суммы "
+        #             f"{base_salary}"
+        #             f"+{calculation_bonus}"
+        #             f"+{calculation_underground}+"
+        #             f"{calculation_night_shifts}"
+        #             f"+{calculation_working_in_temperature} = {result}"
+        #             )
         return result
 
     @cache_result
@@ -163,7 +163,7 @@ class CalculationBaseSalary:
             Decimal("0.01"), rounding=ROUND_HALF_UP
         )
 
-        logger.info(f"Расчет районной надбавки {calculation_base} * {district_allowance} / 100 = {result}")
+        # logger.info(f"Расчет районной надбавки {calculation_base} * {district_allowance} / 100 = {result}")
         return result
 
     @cache_result
@@ -176,7 +176,7 @@ class CalculationBaseSalary:
             Decimal("0.01"), rounding=ROUND_HALF_UP
         )
 
-        logger.info(f"Расчет северной надбавки {calculation_base} * {district_allowance} / 100 = {result}")
+        # logger.info(f"Расчет северной надбавки {calculation_base} * {district_allowance} / 100 = {result}")
         return result
 
     @cache_result
@@ -193,14 +193,14 @@ class CalculationBaseSalary:
             + await self.calculation_working_in_temperature()
         )
 
-        logger.info(f"Расчет общей суммы начислений"
-                    f"+ {await self.calculation_bonus()}"
-                    f"+ {await self.calculation_underground()}"
-                    f"+ {await self.calculation_base_salary()}"
-                    f"+ {await self.calculation_night_shifts()}"
-                    f"+ {await self.calculation_district_allowance()}"
-                    f"+ {await self.calculation_north_allowance()}"
-                    f"+ {await self.calculation_working_in_temperature()} = {result}")
+        # logger.info(f"Расчет общей суммы начислений"
+        #             f"+ {await self.calculation_bonus()}"
+        #             f"+ {await self.calculation_underground()}"
+        #             f"+ {await self.calculation_base_salary()}"
+        #             f"+ {await self.calculation_night_shifts()}"
+        #             f"+ {await self.calculation_district_allowance()}"
+        #             f"+ {await self.calculation_north_allowance()}"
+        #             f"+ {await self.calculation_working_in_temperature()} = {result}")
         return result
 
     @cache_result
@@ -233,7 +233,7 @@ class CalculationBaseSalary:
 
         if not children_raw:
             return Decimal("0.00")
-        logger.info(f"Расчет налогового вычета на детей {deduction} * {base_tax} / 100 = {result}")
+        # logger.info(f"Расчет налогового вычета на детей {deduction} * {base_tax} / 100 = {result}")
         return result
 
     @cache_result
@@ -248,9 +248,9 @@ class CalculationBaseSalary:
             deduction_for_children
 
         if deduction_for_children == Decimal("0.00"):
-            logger.info(f"Расчет подоходного налога {total_accruals} * {withholding_tax} / 100 = {result_zero}")
+            # logger.info(f"Расчет подоходного налога {total_accruals} * {withholding_tax} / 100 = {result_zero}")
             return result_zero
-        logger.info(f"Расчет подоходного налога {total_accruals} * {withholding_tax} / 100 - {deduction_for_children} = {result}")
+        # logger.info(f"Расчет подоходного налога {total_accruals} * {withholding_tax} / 100 - {deduction_for_children} = {result}")
         return result
 
     @cache_result
@@ -290,7 +290,7 @@ class CalculationBaseSalary:
         alimony_raw = await self.salary_data.get_children()
         if not alimony_raw:
             return Decimal("0.00")
-        logger.info(f"Расчет алиментов на детей {net_salary} * {total_deduction} = {alimony_amount}")
+        # logger.info(f"Расчет алиментов на детей {net_salary} * {total_deduction} = {alimony_amount}")
         return alimony_amount
 
     @cache_result
@@ -302,7 +302,7 @@ class CalculationBaseSalary:
         alimony = await self.calculation_alimony()  # Расчет алиментов на детей
 
         result = total_accruals - withholding_tax - alimony
-        logger.info(f"Расчет итоговой суммы {total_accruals} - {withholding_tax} - {alimony} = {result}")
+        # logger.info(f"Расчет итоговой суммы {total_accruals} - {withholding_tax} - {alimony} = {result}")
         return result
 
     @cache_result
@@ -314,7 +314,7 @@ class CalculationBaseSalary:
         result = (base_salary - salary).quantize(
             Decimal("0.01"), rounding=ROUND_HALF_UP
         )
-        logger.info(f"Расчет квартальной доплаты за переработку {base_salary} - {salary} = {result}")
+        # logger.info(f"Расчет квартальной доплаты за переработку {base_salary} - {salary} = {result}")
         return result
 
     async def month_quarter_payment_calculation(self) -> str:
@@ -336,5 +336,5 @@ class CalculationBaseSalary:
 
         month = await self.salary_data.get_month()  # Получение месяца
 
-        logger.info(f"Определяем месяц выплаты за переработку {month} -> {quarter_to_payment.get(month)}")
+        # logger.info(f"Определяем месяц выплаты за переработку {month} -> {quarter_to_payment.get(month)}")
         return quarter_to_payment.get(month, "неизвестный месяц")
