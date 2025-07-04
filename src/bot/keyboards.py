@@ -7,6 +7,12 @@ main_menu_kb = InlineKeyboardMarkup(
         ]
 )
 
+main_menu_start = InlineKeyboardMarkup(
+        inline_keyboard=[
+                [InlineKeyboardButton(text="▶️ Начать", callback_data="start")],
+        ]
+)
+
 show_full_result_kb = InlineKeyboardMarkup(
         inline_keyboard=[
                 [
@@ -53,4 +59,20 @@ show_months_of_years = InlineKeyboardMarkup(
                         InlineKeyboardButton(text="Декабрь", callback_data="month_december"),
                 ],
         ]
+)
+
+
+def get_back_finish_kb() -> InlineKeyboardMarkup:
+    return InlineKeyboardMarkup(
+            inline_keyboard=[
+                    [
+                            InlineKeyboardButton(text="🔙 Назад", callback_data="go_back"),
+                            InlineKeyboardButton(text="⛔ Завершить", callback_data="stop"),
+                    ]
+            ]
+    )
+
+
+combined_keyboard = InlineKeyboardMarkup(
+        inline_keyboard=show_months_of_years.inline_keyboard + get_back_finish_kb().inline_keyboard
 )
